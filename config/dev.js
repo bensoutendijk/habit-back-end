@@ -1,4 +1,4 @@
 module.exports = {
-  mongoURI: 'mongodb+srv://support-hub-dev:GtxnYAB0yRaF8Rji@cluster0-3mw7i.mongodb.net/test?retryWrites=true',
+  mongoURI: 'mongodb+srv://habit-dev:ggwwsSMLDemSmx42@cluster0-lpdc5.mongodb.net/test?retryWrites=true',
   cookieKey: '123123123',
 };
