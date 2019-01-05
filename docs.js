@@ -2,6 +2,13 @@ const TableOfContents = {
   id: '1',
   content: [
     {
+      sectionName: 'Home',
+      path: '/',
+      content: 'home.md',
+      icon: 'file',
+      access: 'default',
+    },
+    {
       sectionName: 'Getting Started',
       path: '/getting-started',
       content: 'gettingStarted.md',
