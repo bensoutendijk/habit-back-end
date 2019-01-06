@@ -1,4 +1,4 @@
-const docs = require('../docs');
+const docs = require('../../docs');
 
 module.exports = app => {
   app.get(
