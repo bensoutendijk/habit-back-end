@@ -21,12 +21,11 @@ mongoose.Promise = global.Promise
 mongoose.connect(keys.mongoURI, {useNewUrlParser: true})
 
 require('./models/User')
-require('./models/Content')
+require('./models/Document')
 
 require('./services/passport')
 
 app.use(require('./routes'));
-require('./routes/api/docsRoutes')(app)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
