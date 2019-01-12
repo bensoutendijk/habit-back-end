@@ -6,7 +6,7 @@ const auth = require('../auth');
 const User = mongoose.model('User');
 
 // POST new user route (optional, everyone has access)
-router.post('/', auth.optional, async (req, res, next) => {
+router.post('/', auth.optional, async (req, res) => {
   const { body: { user } } = req;
 
   if (!user.email) {
@@ -78,15 +78,13 @@ router.post('/login', auth.optional, (req, res, next) => {
     });
   }
 
-  return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+  return passport.authenticate('local', { session: false }, (err, passportUser) => {
     if (err) {
       return next(err);
     }
 
     if (passportUser) {
-      const user = passportUser;
-      user.token = passportUser.generateJWT();
-
+      Object.defineProperty(passportUser, 'token', { value: passportUser.generateJWT() });
       return res.json({ user: user.toAuthJSON() });
     }
 
@@ -99,7 +97,7 @@ router.post('/login', auth.optional, (req, res, next) => {
 });
 
 // GET current route (required, only authenticated users have access)
-router.get('/current', auth.required, (req, res, next) => {
+router.get('/current', auth.required, (req, res) => {
   const { payload: { id } } = req;
 
   return User.findById(id)

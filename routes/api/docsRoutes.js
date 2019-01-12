@@ -12,9 +12,7 @@ router.post('/', async (req, res) => {
 });
 
 // GET index of documents route
-router.get('/:id', async (req, res, next) => {
-  const { params: { id } } = req;
-  const document = await Document.findById(id);
+router.get('/:id', async (req, res) => {
   const tempDocument = {
     _id: '1',
     parent: '0',
