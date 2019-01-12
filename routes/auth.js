@@ -1,11 +1,10 @@
 const jwt = require('express-jwt');
 const keys = require('../config/keys');
 
-const getTokenFromHeaders = (req) => {
-  const { headers: { authorization } } = req;
-
-  if (authorization && authorization.split(' ')[0] === 'Token') {
-    return authorization.split(' ')[1];
+const getToken = (req) => {
+  const { token } = req.cookies;
+  if (token && token.split(' ')[0] === 'Token') {
+    return token.split(' ')[1];
   }
   return null;
 };
@@ -14,12 +13,12 @@ const auth = {
   required: jwt({
     secret: keys.jwtHttpOnlyKey,
     userProperty: 'payload',
-    getToken: getTokenFromHeaders,
+    getToken,
   }),
   optional: jwt({
     secret: keys.jwtHttpOnlyKey,
     userProperty: 'payload',
-    getToken: getTokenFromHeaders,
+    getToken,
     credentialsRequired: false,
   }),
 };

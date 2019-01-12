@@ -47,9 +47,20 @@ router.post('/', auth.optional, async (req, res) => {
     const finalUser = new User(user);
 
     finalUser.setPassword(user.password);
-
-    return finalUser.save()
-      .then(() => res.json({ user: finalUser.toAuthJSON() }));
+    try {
+      await finalUser.save();
+    } catch (err) {
+      return res.json({
+        errors: {
+          user: 'Something went wrong',
+        },
+      });
+    }
+    res.cookie('token', `Token ${finalUser.generateJWT()}`, {
+      expires: new Date(Date.now() + 1000 * 60 * 30),
+      httpOnly: true,
+    });
+    return res.json({ user: finalUser.toAuthJSON() });
   }
   return res.status(442).json({
     errors: {
@@ -84,7 +95,10 @@ router.post('/login', auth.optional, (req, res, next) => {
     }
 
     if (passportUser) {
-      Object.defineProperty(passportUser, 'token', { value: passportUser.generateJWT() });
+      res.cookie('token', `Token ${passportUser.generateJWT()}`, {
+        expires: new Date(Date.now() + 1000 * 60 * 30),
+        httpOnly: true,
+      });
       return res.json({ user: passportUser.toAuthJSON() });
     }
 
@@ -98,14 +112,17 @@ router.post('/login', auth.optional, (req, res, next) => {
 
 // GET current route (required, only authenticated users have access)
 router.get('/current', auth.required, (req, res) => {
-  const { payload: { id } } = req;
+  const { payload: { _id } } = req;
 
-  return User.findById(id)
+  return User.findById(_id)
     .then((user) => {
       if (!user) {
         return res.sendStatus(400);
       }
-
+      res.cookie('token', `Token ${user.generateJWT()}`, {
+        expires: new Date(Date.now() + 1000 * 60 * 30),
+        httpOnly: true,
+      });
       return res.json({ user: user.toAuthJSON() });
     });
 });
