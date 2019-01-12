@@ -1,21 +1,16 @@
 const express = require('express');
 const cors = require('cors');
-const session = require('express-session');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const keys = require('./config/keys');
 
 const app = express();
 
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-app.use(session({
-  secret: 'passport-tutorial',
-  cookie: { maxAge: 60000 },
-  resave: false,
-  saveUninitialized: false,
-}));
 
 mongoose.Promise = global.Promise;
 mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
