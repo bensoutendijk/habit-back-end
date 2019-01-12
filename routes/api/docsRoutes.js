@@ -1,16 +1,17 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
+
 const Document = mongoose.model('Document');
 
-//POST new document route 
+// POST new document route
 router.post('/', async (req, res) => {
   const { body: { document } } = req;
-  const finalDocument = new Document(document)
+  const finalDocument = new Document(document);
   finalDocument.save()
     .then(() => res.json({ document: finalDocument.toJSON() }));
 });
 
-//GET index of documents route
+// GET index of documents route
 router.get('/:id', async (req, res, next) => {
   const { params: { id } } = req;
   const document = await Document.findById(id);
@@ -27,7 +28,7 @@ router.get('/:id', async (req, res, next) => {
         name: 'Section 1',
         path: '/',
         body: 'Hello World. I am Section 1',
-        children: null
+        children: null,
       },
       {
         _id: '3',
@@ -35,7 +36,7 @@ router.get('/:id', async (req, res, next) => {
         name: 'Section 2',
         path: '/',
         body: 'Hello World. I am Section 2',
-        children: null
+        children: null,
       },
       {
         _id: '4',
@@ -50,7 +51,7 @@ router.get('/:id', async (req, res, next) => {
             name: 'Nested 1',
             path: '/',
             body: 'Hello World. I am Nested 1',
-            children: null
+            children: null,
           },
           {
             _id: '6',
@@ -58,12 +59,12 @@ router.get('/:id', async (req, res, next) => {
             name: 'Nested 2',
             path: '/',
             body: 'Hello World. I am Nested 2',
-            children: null
+            children: null,
           },
-        ]
+        ],
       },
-    ]
-  }
+    ],
+  };
   res.send(tempDocument);
 });
 

@@ -10,31 +10,31 @@ const userSchema = new Schema({
   salt: String,
 });
 
-userSchema.methods.setPassword = function(password) {
+userSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
 
-userSchema.methods.validatePassword = function(password) {
+userSchema.methods.validatePassword = function (password) {
   const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
   return this.hash === hash;
 };
 
-userSchema.methods.generateJWT = function() {
+userSchema.methods.generateJWT = function () {
   const today = new Date();
   const expirationDate = new Date(today);
-  expirationDate.setTime(today.getTime() + 1000*60*30);
+  expirationDate.setTime(today.getTime() + 1000 * 60 * 30);
 
   return jwt.sign({
     email: this.email,
-    id: this._id,
+    _id: this._id, // eslint-disable-line no-underscore-dangle
     exp: parseInt(expirationDate.getTime() / 1000, 10),
   }, 'secret');
-}
+};
 
-userSchema.methods.toAuthJSON = function() {
+userSchema.methods.toAuthJSON = function () {
   return {
-    _id: this._id,
+    _id: this._id, // eslint-disable-line no-underscore-dangle
     email: this.email,
     token: this.generateJWT(),
   };
