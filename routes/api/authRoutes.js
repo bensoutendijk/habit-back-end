@@ -56,11 +56,14 @@ router.post('/', auth.optional, async (req, res) => {
         },
       });
     }
-    res.cookie('token', `Token ${finalUser.generateJWT()}`, {
+    res.cookie('token', `Token ${finalUser.generateHttpOnlyJWT()}`, {
       expires: new Date(Date.now() + 1000 * 60 * 30),
       httpOnly: true,
     });
-    return res.json({ user: finalUser.toAuthJSON() });
+    res.cookie('token2', `Token ${finalUser.generateJWT()}`, {
+      expires: new Date(Date.now() + 1000 * 60 * 30),
+    });
+    return res.json({ user: finalUser.toJSON() });
   }
   return res.status(442).json({
     errors: {
@@ -95,11 +98,14 @@ router.post('/login', auth.optional, (req, res, next) => {
     }
 
     if (passportUser) {
-      res.cookie('token', `Token ${passportUser.generateJWT()}`, {
+      res.cookie('token', `Token ${passportUser.generateHttpOnlyJWT()}`, {
         expires: new Date(Date.now() + 1000 * 60 * 30),
         httpOnly: true,
       });
-      return res.json({ user: passportUser.toAuthJSON() });
+      res.cookie('token2', `Token ${passportUser.generateJWT()}`, {
+        expires: new Date(Date.now() + 1000 * 60 * 30),
+      });
+      return res.json({ user: passportUser.toJSON() });
     }
 
     return res.status(400).json({
@@ -119,11 +125,14 @@ router.get('/current', auth.required, (req, res) => {
       if (!user) {
         return res.sendStatus(400);
       }
-      res.cookie('token', `Token ${user.generateJWT()}`, {
+      res.cookie('token', `Token ${user.generateHttpOnlyJWT()}`, {
         expires: new Date(Date.now() + 1000 * 60 * 30),
         httpOnly: true,
       });
-      return res.json({ user: user.toAuthJSON() });
+      res.cookie('token2', `Token ${user.generateJWT()}`, {
+        expires: new Date(Date.now() + 1000 * 60 * 30),
+      });
+      return res.json({ user: user.toJSON() });
     });
 });
 

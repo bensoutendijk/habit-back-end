@@ -21,7 +21,7 @@ userSchema.methods.validatePassword = function (password) {
   return this.hash === hash;
 };
 
-userSchema.methods.generateJWT = function () {
+userSchema.methods.generateHttpOnlyJWT = function () {
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setTime(today.getTime() + 1000 * 60 * 30);
@@ -33,11 +33,22 @@ userSchema.methods.generateJWT = function () {
   }, keys.jwtHttpOnlyKey);
 };
 
-userSchema.methods.toAuthJSON = function () {
+userSchema.methods.generateJWT = function () {
+  const today = new Date();
+  const expirationDate = new Date(today);
+  expirationDate.setTime(today.getTime() + 1000 * 60 * 30);
+
+  return jwt.sign({
+    email: this.email,
+    _id: this._id, // eslint-disable-line no-underscore-dangle
+    exp: parseInt(expirationDate.getTime() / 1000, 10),
+  }, keys.jwtKey);
+};
+
+userSchema.methods.toJSON = function () {
   return {
     _id: this._id, // eslint-disable-line no-underscore-dangle
     email: this.email,
-    token: this.generateJWT(),
   };
 };
 
