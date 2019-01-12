@@ -85,7 +85,7 @@ router.post('/login', auth.optional, (req, res, next) => {
 
     if (passportUser) {
       Object.defineProperty(passportUser, 'token', { value: passportUser.generateJWT() });
-      return res.json({ user: user.toAuthJSON() });
+      return res.json({ user: passportUser.toAuthJSON() });
     }
 
     return res.status(400).json({
