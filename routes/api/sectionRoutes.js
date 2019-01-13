@@ -43,7 +43,7 @@ router.get('/:sectionId', auth.optional, async (req, res) => {
   } catch (err) {
     res.json({
       errors: {
-        section: 'Something went wrong',
+        section: `Unable to find sectionId: ${sectionId} in project: ${projectId}`,
       },
     });
   }
@@ -89,7 +89,7 @@ router.delete('/:sectionId', auth.required, async (req, res) => {
   } catch (err) {
     res.json({
       errors: {
-        section: 'Something went wrong',
+        section: `Unable to delete sectionId: ${sectionId} in project: ${projectId}`,
       },
     });
   }
