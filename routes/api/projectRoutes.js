@@ -6,57 +6,16 @@ const Project = mongoose.model('Project');
 
 router.use('/:projectId/sections', require('./sectionRoutes'));
 
-// POST create Project
-router.post('/', auth.required, async (req, res) => {
-  const userId = req.payload._id;
-  const finalProject = new Project({
-    userId,
-    children: [
-      {
-        name: 'Getting Started',
-        path: '/',
-        body: 'Welcome to Habit',
-      },
-    ],
-  });
-
-  try {
-    await finalProject.save();
-    res.send(finalProject.toJSON());
-  } catch (err) {
-    res.json({
-      errors: {
-        project: 'Something went wrong',
-      },
-    });
-  }
-});
-
 // Get Project
-router.get('/:projectId', auth.optional, async (req, res) => {
-  const { params: { projectId } } = req;
+router.get('/', auth.optional, async (req, res) => {
+  const mouseflowProjectId = '5c3a8e0ea91c28317b436332';
   try {
-    const project = await Project.findOne({ _id: projectId });
+    const project = await Project.findOne({ _id: mouseflowProjectId });
     res.send(project.toJSON());
   } catch (err) {
-    res.json({
+    res.status(400).json({
       errors: {
         project: 'Something went wrong',
-      },
-    });
-  }
-});
-
-// GET Projects index
-router.get('/', auth.required, async (req, res) => {
-  const userId = req.payload._id;
-  try {
-    const projects = await Project.find({ userId });
-    res.send(projects);
-  } catch (err) {
-    res.json({
-      errors: {
-        projects: 'Something went wrong',
       },
     });
   }
