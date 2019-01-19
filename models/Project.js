@@ -7,7 +7,7 @@ const projectSchema = new Schema({
   children: [{
     name: String,
     path: String,
-    body: String,
+    content: String,
   }],
 });
 
