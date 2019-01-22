@@ -3,11 +3,34 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const projectSchema = new Schema({
-  userId: String,
-  children: [{
-    name: String,
-    path: String,
-    content: String,
+  name: {
+    type: String,
+    index: true,
+    unique: true,
+    required: true,
+  },
+  sections: [{
+    name: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    children: [{
+      type: {
+        type: String,
+        required: true,
+      },
+      name: {
+        type: String,
+        unique: true,
+        required: true,
+      },
+      slug: {
+        type: String,
+        unique: true,
+        required: true,
+      },
+    }],
   }],
 });
 

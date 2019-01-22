@@ -8,9 +8,8 @@ router.use('/:projectId/sections', require('./sectionRoutes'));
 
 // Get Project
 router.get('/', auth.optional, async (req, res) => {
-  const mouseflowProjectId = '5c3a8e0ea91c28317b436332';
   try {
-    const project = await Project.findOne({ _id: mouseflowProjectId });
+    const project = await Project.findOne({ name: 'Mouseflow' });
     res.send(project.toJSON());
   } catch (err) {
     res.status(400).json({
