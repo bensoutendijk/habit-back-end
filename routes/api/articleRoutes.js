@@ -21,8 +21,20 @@ router.post('/new', auth.required, async (req, res) => {
       // Query project
       const project = await Project.findOne({ name: 'Mouseflow' });
 
-
       // Validate article
+
+      if (!article.slug) {
+        return res.send(400);
+      }
+      if (!article.name) {
+        return res.send(400);
+      }
+      if (!article.content) {
+        return res.send(400);
+      }
+      if (!article.section) {
+        return res.send(400);
+      }
 
       // Look for duplicate article slug
       const existingSlug = project.sections.find(section => (
@@ -67,11 +79,11 @@ router.post('/new', auth.required, async (req, res) => {
       const params = {
         Bucket: 'soutendijk-habit-dev',
         Key: `${child._id}.md`,
-        Body: article.content,
+        Body: article.content.data,
       };
       try {
-        s3.upload(params, (s3Err) => {
-          if (s3Err) throw s3Err;
+        s3.upload(params, (err) => {
+          if (err) throw err;
         });
       } catch (err) {
         res.status(400).json({
@@ -105,6 +117,7 @@ router.get('/:articleId', auth.optional, async (req, res) => {
       Key: `${articleId}.md`,
     };
     s3.getObject(params, (err, data) => {
+      if (err) throw err;
       if (data) {
         res.send(data.Body.toString());
       } else {
@@ -203,14 +216,15 @@ router.patch('/:articleId', auth.required, async (req, res) => {
       const params = {
         Bucket: 'soutendijk-habit-dev',
         Key: `${child._id}.md`,
-        Body: article.content,
+        Body: article.content.data,
       };
       try {
-        s3.upload(params, (s3Err) => {
-          if (s3Err) throw s3Err;
+        s3.upload(params, (err) => {
+          if (err) throw err;
         });
       } catch (err) {
-        res.status(400).json({
+        console.log(err);
+        return res.status(400).json({
           errors: {
             s3: 'Unable to save file',
           },
