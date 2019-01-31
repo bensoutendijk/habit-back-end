@@ -4,8 +4,6 @@ const auth = require('../auth');
 
 const Project = mongoose.model('Project');
 
-router.use('/:projectId/sections', require('./sectionRoutes'));
-
 // Get Project
 router.get('/', auth.optional, async (req, res) => {
   try {
