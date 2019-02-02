@@ -21,35 +21,6 @@ router.post('/new', auth.required, async (req, res) => {
       // Query project
       const project = await Project.findOne({ name: 'Mouseflow' });
 
-      // Validate article
-
-      if (!article.slug) {
-        return res.send(400);
-      }
-      if (!article.name) {
-        return res.send(400);
-      }
-      if (!article.content) {
-        return res.send(400);
-      }
-      if (!article.section) {
-        return res.send(400);
-      }
-
-      // Look for duplicate article slug
-      const existingSlug = project.sections.find(section => (
-        section.children.some(child => (
-          child.slug === article.slug
-        ))
-      ));
-      if (existingSlug) {
-        return res.status(400).json({
-          errors: {
-            article: 'Duplicate slug',
-          },
-        });
-      }
-
       // Make changes to project
 
       // Find a section by name
@@ -74,7 +45,16 @@ router.post('/new', auth.required, async (req, res) => {
       };
       section.children.push(child);
       // Update in database
-      await Project.findOneAndUpdate({ name: 'Mouseflow' }, project, { new: true });
+      try {
+        await Project.findOneAndUpdate({ name: 'Mouseflow' }, project, { new: true });
+      } catch (err) {
+        return res.status(400).json({
+          errors: {
+            project: 'Unable to update project',
+            err: err.message,
+          },
+        });
+      }
       // S3 Upload
       const params = {
         Bucket: 'soutendijk-habit-dev',
@@ -86,9 +66,10 @@ router.post('/new', auth.required, async (req, res) => {
           if (err) throw err;
         });
       } catch (err) {
-        res.status(400).json({
+        return res.status(400).json({
           errors: {
             s3: 'Unable to save file',
+            err: err.message,
           },
         });
       }
@@ -145,38 +126,6 @@ router.patch('/:articleId', auth.required, async (req, res) => {
       // Query project
       const project = await Project.findOne({ name: 'Mouseflow' });
 
-      // Validate article
-      if (!article.slug) {
-        return res.send(400);
-      }
-      if (!article.name) {
-        return res.send(400);
-      }
-      if (!article.content) {
-        return res.send(400);
-      }
-      if (!article.section) {
-        return res.send(400);
-      }
-
-      // Look for duplicate article slug
-      let existingSlug;
-
-      project.sections.forEach((section) => {
-        section.children.forEach((child) => {
-          if (child.slug === article.slug && child._id.toString() !== articleId) {
-            existingSlug = child.slug;
-          }
-        });
-      });
-
-      if (existingSlug) {
-        return res.status(400).json({
-          errors: {
-            article: 'Duplicate slug',
-          },
-        });
-      }
       // Make changes to project
       const section = project.sections.find(element => element.name === article.section);
       let child = section.children.find(element => element._id.toString() === articleId);
