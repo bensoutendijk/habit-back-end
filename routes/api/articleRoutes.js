@@ -172,7 +172,6 @@ router.patch('/:articleId', auth.required, async (req, res) => {
           if (err) throw err;
         });
       } catch (err) {
-        console.log(err);
         return res.status(400).json({
           errors: {
             s3: 'Unable to save file',
