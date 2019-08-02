@@ -1,8 +1,9 @@
-const prod = require('./prod');
-const dev = require('./dev');
+let keys;
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports = prod;
+  keys = require('./prod');
 } else {
-  module.exports = dev;
+  keys = require('./dev');
 }
+
+module.exports = keys;
