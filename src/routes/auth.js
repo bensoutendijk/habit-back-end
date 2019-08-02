@@ -45,4 +45,4 @@ const auth = {
   ],
 };
 
-module.exports = auth;
+export default auth;

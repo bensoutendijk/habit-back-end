@@ -1,13 +1,14 @@
-const mongoose = require('mongoose');
-const passport = require('passport');
-const router = require('express').Router();
-const auth = require('../auth');
+import mongoose from 'mongoose';
+import passport from 'passport';
+import express from 'express';
+import auth from '../../auth';
 
-const User = mongoose.model('User');
+const router = express.Router();
+const User = mongoose.model('LocalUser');
 
 // POST new user route (optional, everyone has access)
 router.post('/', auth.optional, async (req, res) => {
-  const { body: { user } } = req;
+  const { body: user } = req;
 
   if (!user.email) {
     return res.status(422).json({
@@ -74,7 +75,7 @@ router.post('/', auth.optional, async (req, res) => {
 
 // POST login route (optional, everyone has access)
 router.post('/login', auth.optional, (req, res, next) => {
-  const { body: { user } } = req;
+  const { body: user } = req;
 
   if (!user.email) {
     return res.status(422).json({
@@ -136,4 +137,4 @@ router.get('/current', auth.required, (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

@@ -2,11 +2,11 @@ const AWS = require('aws-sdk');
 
 const mongoose = require('mongoose');
 const router = require('express').Router({ mergeParams: true });
-const auth = require('../auth');
+const auth = require('../../auth');
 
 const Project = mongoose.model('Project');
 
-const keys = require('../../config/keys');
+const keys = require('../../../config/keys');
 
 const s3 = new AWS.S3({
   accessKeyId: keys.awsAccessKey,
