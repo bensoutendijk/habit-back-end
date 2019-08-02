@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "esw -w --quiet",
     "dev": "nodemon index.js",
-    "start": "concurrently \"npm:dev\" \"npm:lint\"",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
