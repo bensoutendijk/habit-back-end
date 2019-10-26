@@ -1,6 +1,12 @@
 const jwt = require('express-jwt');
 const keys = require('../config/keys');
 
+const handleErrorMiddleware = (err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    return res.status(400).send({ user: 'not authorized' });
+  }
+  return next();
+};
 const getHttpOnlyToken = (req) => {
   const { token } = req.cookies;
   if (token && token.split(' ')[0] === 'Token') {
@@ -28,6 +34,7 @@ const auth = {
       userProperty: 'payload',
       getToken,
     }),
+    handleErrorMiddleware,
   ],
   optional: [
     jwt({
