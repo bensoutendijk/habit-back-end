@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 let keys;
 
 if (process.env.NODE_ENV === 'production') {
