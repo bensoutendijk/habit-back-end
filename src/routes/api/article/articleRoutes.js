@@ -1,19 +1,19 @@
-const AWS = require('aws-sdk');
+import mongoose from 'mongoose';
+import AWS from 'aws-sdk';
+import express from 'express';
+import auth from '../../auth';
+import keys from '../../../config/keys';
 
-const mongoose = require('mongoose');
-const router = require('express').Router({ mergeParams: true });
-const auth = require('../../auth');
+const router = express.Router();
 
 const Project = mongoose.model('Project');
-
-const keys = require('../../../config/keys');
 
 const s3 = new AWS.S3({
   accessKeyId: keys.awsAccessKey,
   secretAccessKey: keys.awsSecretAccessKey,
 });
 
-// POST content
+// POST new article
 router.post('/new', auth.required, async (req, res) => {
   const { body: { article } } = req;
   if (article) {

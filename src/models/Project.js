@@ -9,12 +9,10 @@ const articleSchema = new Schema({
   },
   name: {
     type: String,
-    unique: true,
     required: true,
   },
   slug: {
     type: String,
-    unique: true,
     required: true,
   },
 });
@@ -22,17 +20,24 @@ const articleSchema = new Schema({
 const sectionSchema = new Schema({
   name: {
     type: String,
-    unique: true,
     required: true,
   },
   children: [articleSchema],
 });
 
 const projectSchema = new Schema({
+  localUser: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     index: true,
-    unique: true,
+    required: true,
+  },
+  visibility: {
+    type: String,
+    enum: ['public', 'private'],
     required: true,
   },
   sections: [sectionSchema],

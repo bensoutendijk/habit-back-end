@@ -26,12 +26,12 @@ const auth = {
   required: [
     jwt({
       secret: keys.jwtHttpOnlyKey,
-      userProperty: 'payload',
+      userProperty: 'localAuth',
       getToken: getHttpOnlyToken,
     }),
     jwt({
       secret: keys.jwtKey,
-      userProperty: 'payload',
+      userProperty: 'localAuth',
       getToken,
     }),
     handleErrorMiddleware,
@@ -39,13 +39,13 @@ const auth = {
   optional: [
     jwt({
       secret: keys.jwtHttpOnlyKey,
-      userProperty: 'payload',
+      userProperty: 'localAuth',
       getToken: getHttpOnlyToken,
       credentialsRequired: false,
     }),
     jwt({
       secret: keys.jwtKey,
-      userProperty: 'payload',
+      userProperty: 'localAuth',
       getToken,
       credentialsRequired: false,
     }),
