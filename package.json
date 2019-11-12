@@ -17,6 +17,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "aws-sdk": "^2.391.0",
+    "axios": "^0.19.0",
     "body-parser": "^1.18.3",
     "concurrently": "^4.1.0",
     "cookie-parser": "^1.4.3",
@@ -29,6 +30,7 @@
     "mongoose": "^5.4.1",
     "nodemon": "^1.18.9",
     "passport": "^0.4.0",
+    "passport-github": "^1.1.0",
     "passport-local": "^1.0.0"
   },
   "babel": {
@@ -42,6 +44,10 @@
     ],
     "rules": {
       "linebreak-style": 0,
+      "indent": [
+        "error",
+        4
+      ],
       "no-underscore-dangle": [
         "error",
         {
