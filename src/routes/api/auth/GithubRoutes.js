@@ -8,19 +8,7 @@ const LocalUser = mongoose.model('LocalUser');
 const OAuthUser = mongoose.model('OAuthUser');
 
 const createGithubUser = async (githubProfile, localUser) => {
-    const finalGithubUser = new OAuthUser({
-        user: {
-            username: githubProfile.username,
-            userid: githubProfile.id,
-            email: githubProfile.email,
-        },
-        tokens: {
-            accessToken: githubProfile.tokens.accessToken,
-            refreshToken: githubProfile.tokens.refreshToken,
-            expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 365,
-        },
-        provider: githubProfile.provider,
-    });
+    const finalGithubUser = new OAuthUser(githubProfile);
 
     localUser.services.push(finalGithubUser._id);
 
@@ -46,11 +34,11 @@ router.get('/login', auth.required, passport.authenticate('github', {
     scope: [
         'user:email',
         'read:user',
-        'write:repo_hook',
+        'repo',
     ],
 }));
 
-router.get('/callback', auth.required, passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
+router.get('/callback', auth.required, passport.authenticate('github', { failureRedirect: '/api/auth/github/login' }), async (req, res) => {
     const { user: githubProfile } = req;
     const { localAuth } = req;
 
@@ -65,5 +53,14 @@ router.get('/callback', auth.required, passport.authenticate('github', { failure
 
     return res.redirect('/');
 });
+
+router.get('/current', auth.required, async (req, res) => {
+    const { githubUser } = req;
+    if (githubUser) {
+        return res.send(githubUser.user);
+    }
+    return res.sendStatus(400);
+});
+
 
 export default router;

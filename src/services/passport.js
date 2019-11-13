@@ -8,14 +8,23 @@ const keys = require('../config/keys');
 const GITHUB_CLIENT_ID = keys.githubClientId;
 const GITHUB_CLIENT_SECRET = keys.githubClientSecret;
 
-const User = mongoose.model('LocalUser');
-const OAuthUser = mongoose.model('OAuthUser');
+const LocalUser = mongoose.model('LocalUser');
+
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser((id, done) => {
+    LocalUser.findById(id, (err, user) => {
+        done(err, user);
+    });
+});
 
 passport.use(new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
 }, (email, password, done) => {
-    User.findOne({ email })
+    LocalUser.findOne({ email })
         .then((user) => {
             if (!user || !user.validatePassword(password)) {
                 return done(null, false, {
@@ -33,9 +42,19 @@ passport.use(new LocalStrategy({
 passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: 'http://127.0.0.1:3000/auth/github/callback',
-}, (accessToken, refreshToken, profile, cb) => {
-    OAuthUser.findOrCreate({
-        githubId: profile.id,
-    }, (err, user) => cb(err, user));
+}, async (accessToken, refreshToken, profile, done) => {
+    const githubUser = {
+        user: {
+            username: profile.username,
+            userid: profile.id,
+        },
+        tokens: {
+            accessToken,
+            refreshToken,
+            expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 30,
+        },
+        provider: profile.provider,
+    };
+
+    return done(null, githubUser);
 }));

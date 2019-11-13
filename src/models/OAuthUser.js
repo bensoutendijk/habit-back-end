@@ -10,10 +10,6 @@ const oauthUserSchema = new Schema({
             type: Number,
             required: true,
         },
-        channelid: {
-            type: Number,
-            required: true,
-        },
     },
     tokens: {
         accessToken: {
@@ -22,7 +18,6 @@ const oauthUserSchema = new Schema({
         },
         refreshToken: {
             type: String,
-            required: true,
         },
         expiresAt: {
             type: Number,
