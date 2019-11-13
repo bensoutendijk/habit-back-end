@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "debug": "npm run build && npm start",
     "lint": "esw -w --quiet",
-    "prebuild": "rm -rf build",
-    "build": "babel -d build src",
+    "prebuild": "rimraf build",
+    "build": "babel -d build src --source-maps",
     "dev": "nodemon --exec babel-node src/index.js",
     "prod": "NODE_ENV=production node build/index.js",
     "start": "node build/index.js",
@@ -36,7 +37,9 @@
   "babel": {
     "presets": [
       "@babel/preset-env"
-    ]
+    ],
+    "sourceMaps": "inline",
+    "retainLines": true
   },
   "eslintConfig": {
     "extends": [
