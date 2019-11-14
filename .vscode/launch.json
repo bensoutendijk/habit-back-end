@@ -13,7 +13,8 @@
             ],
             "program": "${workspaceFolder}\\src/index.js",
             "outFiles": ["${workspaceFolder}/build/**/*.js"],
-            "sourceMaps": true
+            "sourceMaps": true,
+            "preLaunchTask": "npm: build"
         }
     ]
 }

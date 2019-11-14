@@ -44,6 +44,7 @@ passport.use(new GitHubStrategy({
     clientSecret: GITHUB_CLIENT_SECRET,
 }, async (accessToken, refreshToken, profile, done) => {
     const githubUser = {
+        id: profile.id,
         user: {
             username: profile.username,
             userid: profile.id,
