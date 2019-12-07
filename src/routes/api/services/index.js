@@ -27,24 +27,6 @@ router.use('/:provider/:username/repos', auth.required, async (req, res, next) =
     next();
 }, repoRoutes);
 
-router.get('/:provider/:username', auth.required, async (req, res) => {
-    const { localAuth: { _id }, params: { provider, username } } = req;
-
-    const { services } = await LocalUser.findById(_id);
-    const users = await OAuthUser.find({ _id: { $in: services } });
-
-    const data = users.filter(user => (
-        user.provider.toLowerCase() === provider.toLowerCase()
-    && user.user.username.toLowerCase() === username.toLowerCase()
-    ));
-
-    res.send(data.map(user => ({
-        _id: user._id,
-        data: user.user,
-        provider: user.provider,
-    })));
-});
-
 router.get('/', auth.required, async (req, res) => {
     const { localAuth: { _id } } = req;
 
