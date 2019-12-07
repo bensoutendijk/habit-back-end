@@ -51,7 +51,7 @@ router.get('/callback', auth.required, passport.authenticate('github', { failure
         createGithubUser(githubProfile, localUser);
     }
 
-    return res.redirect('/services');
+    return res.redirect(`/projects/new`);
 });
 
 router.get('/current', auth.required, async (req, res) => {
