@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 
 const projectSchema = new Schema({
     serviceid: String,
-    repoid: String,
+    repoid: Number,
 }, { timestamps: true });
 
 mongoose.model('Project', projectSchema);
