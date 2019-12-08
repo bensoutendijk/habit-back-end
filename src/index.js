@@ -14,6 +14,7 @@ mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
 
 require('./models/LocalUser');
 require('./models/OAuthUser');
+require('./models/Project');
 
 require('./services/passport');
 
