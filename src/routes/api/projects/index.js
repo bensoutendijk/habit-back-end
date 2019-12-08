@@ -12,35 +12,33 @@ router.get('/', auth.required, async (req, res) => {
 
     const { services } = await LocalUser.findById(_id);
     const users = await OAuthUser.find({ _id: { $in: services } });
-    
+
     try {
         const projects = await Project.find({
             serviceid: { $in: users.map(user => user._id) },
         });
 
-        return res.status(200).send(projects);
+        return res.status(200).json(projects);
     } catch (error) {
-        return res.send({
+        return res.status(200).json({
             projects: 'Error finding projects',
             message: error.message,
         });
     }
-
 });
 
 router.post('/', auth.required, async (req, res) => {
     const { body: project } = req;
-
     try {
         const existingProject = await Project.find({
             serviceid: project.serviceid,
             repoid: project.repoid,
         });
-        if (existingProject) {
-            return res.send(existingProject);
+        if (existingProject.length) {
+            return res.status(200).json(existingProject);
         }
     } catch (error) {
-        return res.send({
+        return res.status(400).json({
             projects: 'Error finding project',
         });
     }
@@ -49,9 +47,9 @@ router.post('/', auth.required, async (req, res) => {
 
     try {
         await finalProject.save();
-        return res.send([finalProject]);
+        return res.status(200).json([finalProject]);
     } catch (error) {
-        return res.send({
+        return res.status(400).json({
             projects: 'Could not save project',
         });
     }

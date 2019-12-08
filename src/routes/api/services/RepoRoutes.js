@@ -15,14 +15,14 @@ router.get('/', auth.required, async (req, res) => {
             headers: { Authorization: `bearer ${service.tokens.accessToken}` },
         });
 
-        return res.send(repos.map(repo => ({
+        return res.status(200).json(repos.map(repo => ({
             id: repo.id,
             data: repo,
             service,
         })));
     }
     default:
-        return res.status(400).send({ service: 'invalid provider' });
+        return res.status(400).json({ service: 'invalid provider' });
     }
 });
 
@@ -70,13 +70,13 @@ router.get('/:reponame/details', auth.required, async (req, res) => {
             const data = {};
             data.contents = await getContents();
             data.branches = await getBranches();
-            return res.send(data);
+            return res.status(200).json(data);
         } catch (error) {
-            return res.status(400).send({ contents: error.message });
+            return res.status(400).json({ contents: error.message });
         }
     }
     default:
-        return res.status(400).send({ service: 'invalid provider' });
+        return res.status(400).json({ service: 'invalid provider' });
     }
 });
 

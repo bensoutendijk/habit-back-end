@@ -57,7 +57,7 @@ router.get('/callback', auth.required, passport.authenticate('github', { failure
 router.get('/current', auth.required, async (req, res) => {
     const { githubUser } = req;
     if (githubUser) {
-        return res.send(githubUser.user);
+        return res.status(200).json(githubUser.user);
     }
     return res.sendStatus(400);
 });

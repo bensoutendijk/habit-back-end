@@ -3,7 +3,7 @@ const keys = require('../config/keys');
 
 const handleErrorMiddleware = (err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
-        return res.status(400).send({ user: 'not authorized' });
+        return res.status(400).json({ user: 'not authorized' });
     }
     return next();
 };
