@@ -51,7 +51,7 @@ router.post('/', auth.optional, async (req, res) => {
         try {
             await finalUser.save();
         } catch (err) {
-            return res.json({
+            return res.status(400).json({
                 errors: {
                     user: 'Something went wrong',
                 },
@@ -64,7 +64,7 @@ router.post('/', auth.optional, async (req, res) => {
         res.cookie('token2', `Token ${finalUser.generateJWT()}`, {
             expires: new Date(Date.now() + 1000 * 60 * 30),
         });
-        return res.json({ user: finalUser.toJSON() });
+        return res.status(200).json({ user: finalUser.toJSON() });
     }
     return res.status(442).json({
         errors: {
@@ -106,7 +106,7 @@ router.post('/login', auth.optional, (req, res, next) => {
             res.cookie('token2', `Token ${passportUser.generateJWT()}`, {
                 expires: new Date(Date.now() + 1000 * 60 * 30),
             });
-            return res.json({ user: passportUser.toJSON() });
+            return res.status(200).json({ user: passportUser.toJSON() });
         }
 
         return res.status(400).json({
@@ -133,7 +133,7 @@ router.get('/current', auth.required, (req, res) => {
             res.cookie('token2', `Token ${user.generateJWT()}`, {
                 expires: new Date(Date.now() + 1000 * 60 * 30),
             });
-            return res.json({ user: user.toJSON() });
+            return res.status(200).json({ user: user.toJSON() });
         });
 });
 
